@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LiveKit Mobile UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #000;
+      color: white;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: cover;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    button {
+      background: white;
+      color: black;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button:active {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay muted playsinline></video>
+
+  <div class="controls">
+    <button id="mic">Mute</button>
+    <button id="cam">Camera</button>
+    <button id="leave">End</button>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
