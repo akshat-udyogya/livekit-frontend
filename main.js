@@ -56,4 +56,32 @@ document.getElementById('cam').addEventListener('click', async () => {
 document.getElementById('leave').addEventListener('click', () => {
     room.disconnect();
   });
+
+try {
+  const res = await fetch('https://livekit-yg67.onrender.com/get-token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identity, roomName }),
+  });
+  const data = await res.json();
+  console.log("Received token:", data);
+  const token = data.token;
+
+  const videoTrack = await createLocalVideoTrack({ facingMode });
+  const audioTrack = await createLocalAudioTrack();
+  localTracks = [audioTrack, videoTrack];
+  console.log("Tracks created");
+
+  await connect(room, token, {
+    tracks: localTracks,
+  });
+  console.log("Connected to room");
+
+  localParticipant = room.localParticipant;
+  const videoEl = document.getElementById('video');
+  videoTrack.attach(videoEl);
+} catch (err) {
+  console.error("Error joining room:", err);
+}
+
   
