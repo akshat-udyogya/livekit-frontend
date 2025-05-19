@@ -52,12 +52,21 @@
     <button id="leave">End</button>
   </div>
 
-  <!-- ✅ Load LiveKit UMD bundle first -->
-  <script src="https://unpkg.com/livekit-client/dist/livekit-client.umd.min.js"></script>
-
-  <!-- ✅ Inline logic AFTER LiveKit is loaded -->
+  <!-- ✅ Dynamically load the script -->
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    function loadLiveKitScript() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/livekit-client/dist/livekit-client.umd.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    async function init() {
+      await loadLiveKitScript();
+
       const {
         Room,
         createLocalVideoTrack,
@@ -124,7 +133,9 @@
       document.getElementById('leave').addEventListener('click', () => {
         room.disconnect();
       });
-    });
+    }
+
+    init().catch(console.error);
   </script>
 </body>
 </html>
