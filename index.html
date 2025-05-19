@@ -52,14 +52,17 @@
     <button id="leave">End</button>
   </div>
 
-  <!-- ✅ Dynamically load the script -->
+  <!-- ✅ Corrected LiveKit UMD script -->
   <script>
     function loadLiveKitScript() {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = 'https://cdn.livekit.io/livekit-client-1.7.6.umd.min.js';
         script.onload = resolve;
-        script.onerror = reject;
+        script.onerror = (e) => {
+          console.error('Failed to load LiveKit script', e);
+          reject(e);
+        };
         document.head.appendChild(script);
       });
     }
