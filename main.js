@@ -1,10 +1,9 @@
-import {
+const {
   Room,
-  Participant,
   createLocalVideoTrack,
   createLocalAudioTrack,
-  connect,
-} from 'https://esm.sh/@livekit/client';
+  connect
+} = window.livekit;
 
 const room = new Room();
 let localParticipant;
@@ -17,27 +16,31 @@ async function joinRoom() {
   const identity = params.get('identity') || 'guest';
   const roomName = params.get('room') || 'default';
 
-  // Get token
-  const res = await fetch('https://livekit-yg67.onrender.com/get-token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ identity, roomName }),
-  });
-  const { token } = await res.json();
+  try {
+    const res = await fetch('https://livekit-yg67.onrender.com/get-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identity, roomName }),
+    });
 
-  // Create local tracks
-  const videoTrack = await createLocalVideoTrack({ facingMode });
-  const audioTrack = await createLocalAudioTrack();
-  localTracks = [audioTrack, videoTrack];
+    const { token } = await res.json();
 
-  await connect(room, token, {
-    tracks: localTracks,
-  });
+    const videoTrack = await createLocalVideoTrack({ facingMode });
+    const audioTrack = await createLocalAudioTrack();
+    localTracks = [audioTrack, videoTrack];
 
-  localParticipant = room.localParticipant;
+    await connect(room, token, {
+      tracks: localTracks,
+    });
 
-  const videoEl = document.getElementById('video');
-  videoTrack.attach(videoEl);
+    localParticipant = room.localParticipant;
+
+    const videoEl = document.getElementById('video');
+    videoTrack.attach(videoEl);
+
+  } catch (err) {
+    console.error('Error joining room:', err);
+  }
 }
 
 joinRoom();
@@ -60,34 +63,5 @@ document.getElementById('cam').addEventListener('click', async () => {
 });
 
 document.getElementById('leave').addEventListener('click', () => {
-    room.disconnect();
-  });
-
-try {
-  const res = await fetch('https://livekit-yg67.onrender.com/get-token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ identity, roomName }),
-  });
-  const data = await res.json();
-  console.log("Received token:", data);
-  const token = data.token;
-
-  const videoTrack = await createLocalVideoTrack({ facingMode });
-  const audioTrack = await createLocalAudioTrack();
-  localTracks = [audioTrack, videoTrack];
-  console.log("Tracks created");
-
-  await connect(room, token, {
-    tracks: localTracks,
-  });
-  console.log("Connected to room");
-
-  localParticipant = room.localParticipant;
-  const videoEl = document.getElementById('video');
-  videoTrack.attach(videoEl);
-} catch (err) {
-  console.error("Error joining room:", err);
-}
-
-  
+  room.disconnect();
+});
