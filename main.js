@@ -1,4 +1,10 @@
-import { Room, Participant, createLocalVideoTrack, createLocalAudioTrack, connect } from 'https://cdn.skypack.dev/livekit-client';
+import {
+  Room,
+  Participant,
+  createLocalVideoTrack,
+  createLocalAudioTrack,
+  connect,
+} from 'https://esm.sh/@livekit/client';
 
 const room = new Room();
 let localParticipant;
